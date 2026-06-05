@@ -182,9 +182,9 @@
 </div>
 
 <div class="tiers-bar">
-  <div class="tier-pill bronce" id="tier-bronce-label">🥉 Bronce — desde $500.000</div>
-  <div class="tier-pill plata" id="tier-plata-label">🥈 Plata — desde $1.000.000</div>
-  <div class="tier-pill oro" id="tier-oro-label">🥇 Oro — desde $1.500.000</div>
+  <div class="tier-pill bronce" id="tier-bronce-label">Socio — desde $500.000</div>
+  <div class="tier-pill plata" id="tier-plata-label">Pro — desde $1.000.000</div>
+  <div class="tier-pill oro" id="tier-oro-label">Premium — desde $1.500.000</div>
 </div>
 
 <div class="wrap">
@@ -225,6 +225,51 @@ const C = { pos:1, nombre:3, taller:4, zona:5, nivel:6, clientes:7 };
 // Tier thresholds (clientes como proxy de actividad)
 // Usamos nivel directamente desde el sheet
 const TIER_NEXT = { 'bronce': { label:'Plata', min:40000 }, 'plata': { label:'Oro', min:100000 }, 'oro': null };
+
+
+const ICONS = {
+  socio: `<svg viewBox="-52 -52 104 104" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="0" cy="0" r="52" fill="#eef1f7" stroke="#2b3d60" stroke-width="1"/>
+    <g transform="rotate(-35)">
+      <rect x="-5" y="2" width="10" height="32" rx="4" fill="#2b3d60"/>
+      <rect x="-14" y="-22" width="28" height="22" rx="6" fill="#2b3d60"/>
+      <rect x="-7" y="-18" width="14" height="14" rx="4" fill="#eef1f7"/>
+    </g>
+  </svg>`,
+  pro: `<svg viewBox="-52 -52 104 104" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="0" cy="0" r="52" fill="#e8f0fa" stroke="#2b3d60" stroke-width="1"/>
+    <circle cx="0" cy="0" r="30" fill="none" stroke="#2b3d60" stroke-width="5"/>
+    <circle cx="0" cy="0" r="14" fill="none" stroke="#2b3d60" stroke-width="4"/>
+    <circle cx="0" cy="0" r="5" fill="#2b3d60"/>
+    <g stroke="#2b3d60" stroke-width="2.5" stroke-linecap="round">
+      <line x1="0" y1="-16" x2="0" y2="-27"/>
+      <line x1="13.8" y1="-8" x2="23.4" y2="-13.5"/>
+      <line x1="13.8" y1="8" x2="23.4" y2="13.5"/>
+      <line x1="0" y1="16" x2="0" y2="27"/>
+      <line x1="-13.8" y1="8" x2="-23.4" y2="13.5"/>
+      <line x1="-13.8" y1="-8" x2="-23.4" y2="-13.5"/>
+    </g>
+  </svg>`,
+  premium: `<svg viewBox="-52 -52 104 104" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="0" cy="0" r="52" fill="#1e2d4a" stroke="#2b3d60" stroke-width="1"/>
+    <polygon points="0,-28 22,-8 14,26 -14,26 -22,-8" fill="none" stroke="#ffffff" stroke-width="1.5"/>
+    <line x1="-22" y1="-8" x2="0" y2="-8" stroke="#ffffff" stroke-width="1" opacity="0.5"/>
+    <line x1="22" y1="-8" x2="0" y2="-8" stroke="#ffffff" stroke-width="1" opacity="0.5"/>
+    <line x1="0" y1="-28" x2="0" y2="-8" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+    <line x1="0" y1="-8" x2="14" y2="26" stroke="#ffffff" stroke-width="1" opacity="0.3"/>
+    <line x1="0" y1="-8" x2="-14" y2="26" stroke="#ffffff" stroke-width="1" opacity="0.3"/>
+    <line x1="0" y1="-8" x2="0" y2="26" stroke="#ffffff" stroke-width="1" opacity="0.25"/>
+  </svg>`
+};
+
+function getNivelIcon(nivel) {
+  if (!nivel || nivel === 'Sin nivel') return '';
+  const l = nivel.toLowerCase();
+  if (l.includes('premium')) return ICONS.premium;
+  if (l.includes('pro'))     return ICONS.pro;
+  if (l.includes('socio'))   return ICONS.socio;
+  return '';
+}
 
 function parseCSV(text) {
   const lines = text.trim().split('\n').map(l=>l.trim()).filter(Boolean);
@@ -275,9 +320,9 @@ function progClass(n) {
 function getProgress(nivel, clientes) {
   const k = tierKey(nivel);
   if (k === 'oro')    return { pct:100, label:'Nivel máximo 🥇', next:null };
-  if (k === 'plata')  return { pct:75,  label:'Próximo nivel: Oro 🥇', next:'oro' };
-  if (k === 'bronce') return { pct:50,  label:'Próximo nivel: Plata 🥈', next:'plata' };
-  return               { pct:15,  label:'Seguí sumando para llegar a Bronce 🥉', next:'bronce' };
+  if (k === 'plata')  return { pct:75,  label:'Próximo nivel: Premium', next:'oro' };
+  if (k === 'bronce') return { pct:50,  label:'Próximo nivel: Pro', next:'plata' };
+  return               { pct:15,  label:'Seguí sumando para llegar a Socio', next:'bronce' };
 }
 
 let allData = [];
@@ -310,7 +355,7 @@ function renderPodio(top3) {
         <div class="podio-pos">Posición ${pos}</div>
         <div class="podio-name">${nombre}</div>
         ${taller ? `<div class="podio-taller">${taller}</div>` : ''}
-        ${showNivel(nivel) ? `<div class="podio-nivel ${nb}">${nivel}</div>` : ""}
+        ${showNivel(nivel) ? `<div class="podio-nivel ${nb}" style="display:flex;align-items:center;gap:6px">${getNivelIcon(nivel)}<span>${nivel}</span></div>` : ""}
         <div class="podio-clientes">${clientes}</div>
         <div class="podio-cli-label">clientes referidos</div>
         ${prog.next ? `
@@ -378,7 +423,7 @@ function renderList(data, query='') {
           </div>` : ''}
         </div>
         <div class="right">
-          ${showNivel(nivel) ? `<div class="nivel-badge ${nb}">${nivel}</div>` : ""}
+          ${showNivel(nivel) ? `<div class="nivel-badge ${nb}" style="display:flex;align-items:center;gap:4px;padding:3px 8px">${getNivelIcon(nivel)}<span>${nivel}</span></div>` : ""}
           <div class="cli-num">${clientes}</div>
           <div class="cli-label">clientes</div>
         </div>
@@ -433,7 +478,7 @@ function applySearch(query) {
             </div>` : ''}
           </div>
           <div class="right">
-            ${showNivel(nivel) ? `<div class="nivel-badge ${nb}">${nivel}</div>` : ""}
+            ${showNivel(nivel) ? `<div class="nivel-badge ${nb}" style="display:flex;align-items:center;gap:4px;padding:3px 8px">${getNivelIcon(nivel)}<span>${nivel}</span></div>` : ""}
             <div class="cli-num">${clientes}</div>
             <div class="cli-label">clientes</div>
           </div>
@@ -468,9 +513,9 @@ function render(rows) {
     if ((r[1]||'').trim() === 'CONFIG_BRONCE') minBronce = parseInt(r[2]);
   });
   if (minBronce) { 
-    document.getElementById('tier-bronce-label').textContent = `🥉 Bronce — desde ${formatMonto(minBronce)}`;
+    document.getElementById('tier-bronce-label').textContent = `Socio — desde ${formatMonto(minBronce)}`;
   }
-  if (minPlata) document.getElementById('tier-plata-label').textContent = `🥈 Plata — desde ${formatMonto(minPlata)}`;
+  if (minPlata) document.getElementById('tier-plata-label').textContent = `Pro — desde ${formatMonto(minPlata)}`;
   if (minOro)   document.getElementById('tier-oro-label').textContent   = `🥇 Oro — desde ${formatMonto(minOro)}`;
   const valid = rows
     .filter(r => (r[C.nombre]||'').trim() && !isNaN(parseInt(r[C.pos])) && parseInt(r[C.pos])>0)
