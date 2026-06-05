@@ -95,6 +95,7 @@
   .nb-plata  { color:var(--silver); background:var(--silver-l); border-color:var(--silver-b); }
   .nb-bronce { color:var(--bronze); background:var(--bronze-l); border-color:var(--bronze-b); }
   .nb-sin    { color:var(--text3);  background:var(--bg);        border-color:var(--border); }
+  .nivel-badge, .podio-nivel { display:inline-flex; align-items:center; gap:4px; }
   .podio-clientes { font-family:'DM Mono',monospace; font-size:22px; font-weight:700; color:var(--navy); line-height:1; }
   .podio-cli-label { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; }
 
@@ -228,46 +229,42 @@ const TIER_NEXT = { 'bronce': { label:'Plata', min:40000 }, 'plata': { label:'Or
 
 
 const ICONS = {
-  socio: `<svg viewBox="-52 -52 104 104" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="0" cy="0" r="52" fill="#eef1f7" stroke="#2b3d60" stroke-width="1"/>
-    <g transform="rotate(-35)">
-      <rect x="-5" y="2" width="10" height="32" rx="4" fill="#2b3d60"/>
-      <rect x="-14" y="-22" width="28" height="22" rx="6" fill="#2b3d60"/>
-      <rect x="-7" y="-18" width="14" height="14" rx="4" fill="#eef1f7"/>
+  socio: `<svg viewBox="-18 -18 36 36" width="14" height="14" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:.8">
+    <g transform="rotate(-35)" fill="currentColor">
+      <rect x="-3" y="1" width="6" height="14" rx="2"/>
+      <rect x="-8" y="-10" width="16" height="10" rx="3"/>
+      <rect x="-4" y="-8" width="8" height="6" rx="2" fill="white" opacity="0.9"/>
     </g>
   </svg>`,
-  pro: `<svg viewBox="-52 -52 104 104" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="0" cy="0" r="52" fill="#e8f0fa" stroke="#2b3d60" stroke-width="1"/>
-    <circle cx="0" cy="0" r="30" fill="none" stroke="#2b3d60" stroke-width="5"/>
-    <circle cx="0" cy="0" r="14" fill="none" stroke="#2b3d60" stroke-width="4"/>
-    <circle cx="0" cy="0" r="5" fill="#2b3d60"/>
-    <g stroke="#2b3d60" stroke-width="2.5" stroke-linecap="round">
-      <line x1="0" y1="-16" x2="0" y2="-27"/>
-      <line x1="13.8" y1="-8" x2="23.4" y2="-13.5"/>
-      <line x1="13.8" y1="8" x2="23.4" y2="13.5"/>
-      <line x1="0" y1="16" x2="0" y2="27"/>
-      <line x1="-13.8" y1="8" x2="-23.4" y2="13.5"/>
-      <line x1="-13.8" y1="-8" x2="-23.4" y2="-13.5"/>
+  pro: `<svg viewBox="-18 -18 36 36" width="14" height="14" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:.8">
+    <circle cx="0" cy="0" r="13" fill="none" stroke="currentColor" stroke-width="2"/>
+    <circle cx="0" cy="0" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="2" fill="currentColor"/>
+    <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <line x1="0" y1="-7" x2="0" y2="-11"/>
+      <line x1="6" y1="-3.5" x2="9.5" y2="-5.5"/>
+      <line x1="6" y1="3.5" x2="9.5" y2="5.5"/>
+      <line x1="0" y1="7" x2="0" y2="11"/>
+      <line x1="-6" y1="3.5" x2="-9.5" y2="5.5"/>
+      <line x1="-6" y1="-3.5" x2="-9.5" y2="-5.5"/>
     </g>
   </svg>`,
-  premium: `<svg viewBox="-52 -52 104 104" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="0" cy="0" r="52" fill="#1e2d4a" stroke="#2b3d60" stroke-width="1"/>
-    <polygon points="0,-28 22,-8 14,26 -14,26 -22,-8" fill="none" stroke="#ffffff" stroke-width="1.5"/>
-    <line x1="-22" y1="-8" x2="0" y2="-8" stroke="#ffffff" stroke-width="1" opacity="0.5"/>
-    <line x1="22" y1="-8" x2="0" y2="-8" stroke="#ffffff" stroke-width="1" opacity="0.5"/>
-    <line x1="0" y1="-28" x2="0" y2="-8" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
-    <line x1="0" y1="-8" x2="14" y2="26" stroke="#ffffff" stroke-width="1" opacity="0.3"/>
-    <line x1="0" y1="-8" x2="-14" y2="26" stroke="#ffffff" stroke-width="1" opacity="0.3"/>
-    <line x1="0" y1="-8" x2="0" y2="26" stroke="#ffffff" stroke-width="1" opacity="0.25"/>
+  premium: `<svg viewBox="-18 -18 36 36" width="14" height="14" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:.8">
+    <polygon points="0,-14 11,-4 7,13 -7,13 -11,-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <line x1="-11" y1="-4" x2="0" y2="-4" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+    <line x1="11" y1="-4" x2="0" y2="-4" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+    <line x1="0" y1="-14" x2="0" y2="-4" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+    <line x1="0" y1="-4" x2="7" y2="13" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+    <line x1="0" y1="-4" x2="-7" y2="13" stroke="currentColor" stroke-width="1" opacity="0.4"/>
   </svg>`
 };
 
 function getNivelIcon(nivel) {
   if (!nivel || nivel === 'Sin nivel') return '';
   const l = nivel.toLowerCase();
-  if (l.includes('premium')) return ICONS.premium;
-  if (l.includes('pro'))     return ICONS.pro;
-  if (l.includes('socio'))   return ICONS.socio;
+  if (l.includes('premium') || l.includes('oro'))   return ICONS.premium;
+  if (l.includes('pro')     || l.includes('plata')) return ICONS.pro;
+  if (l.includes('socio')   || l.includes('bronce')) return ICONS.socio;
   return '';
 }
 
@@ -292,13 +289,21 @@ function parseCSV(text) {
 function nbClass(n) {
   if (!n || n === 'Sin nivel') return 'nb-sin';
   const l=n.toLowerCase();
-  if (l.includes('oro'))    return 'nb-oro';
-  if (l.includes('plata'))  return 'nb-plata';
-  if (l.includes('bronce')) return 'nb-bronce';
+  if (l.includes('oro')    || l.includes('premium')) return 'nb-oro';
+  if (l.includes('plata')  || l.includes('pro'))     return 'nb-plata';
+  if (l.includes('bronce') || l.includes('socio'))   return 'nb-bronce';
   return 'nb-sin';
 }
 function showNivel(n) {
   return n && n !== 'Sin nivel' && n.trim() !== '';
+}
+function mapNivel(n) {
+  if (!n) return '';
+  const l = n.toLowerCase();
+  if (l.includes('oro')    || l.includes('premium')) return 'Premium';
+  if (l.includes('plata')  || l.includes('pro'))     return 'Pro';
+  if (l.includes('bronce') || l.includes('socio'))   return 'Socio';
+  return '';
 }
 
 function tierKey(n) {
@@ -355,7 +360,7 @@ function renderPodio(top3) {
         <div class="podio-pos">Posición ${pos}</div>
         <div class="podio-name">${nombre}</div>
         ${taller ? `<div class="podio-taller">${taller}</div>` : ''}
-        ${showNivel(nivel) ? `<div class="podio-nivel ${nb}" style="display:flex;align-items:center;gap:6px">${getNivelIcon(nivel)}<span>${nivel}</span></div>` : ""}
+        ${showNivel(nivel) ? `<div class="podio-nivel ${nb}">${getNivelIcon(nivel)}<span>${mapNivel(nivel)}</span></div>` : ""}
         <div class="podio-clientes">${clientes}</div>
         <div class="podio-cli-label">clientes referidos</div>
         ${prog.next ? `
@@ -423,7 +428,7 @@ function renderList(data, query='') {
           </div>` : ''}
         </div>
         <div class="right">
-          ${showNivel(nivel) ? `<div class="nivel-badge ${nb}" style="display:flex;align-items:center;gap:4px;padding:3px 8px">${getNivelIcon(nivel)}<span>${nivel}</span></div>` : ""}
+          ${showNivel(nivel) ? `<div class="nivel-badge ${nb}">${getNivelIcon(nivel)}<span>${mapNivel(nivel)}</span></div>` : ""}
           <div class="cli-num">${clientes}</div>
           <div class="cli-label">clientes</div>
         </div>
@@ -478,7 +483,7 @@ function applySearch(query) {
             </div>` : ''}
           </div>
           <div class="right">
-            ${showNivel(nivel) ? `<div class="nivel-badge ${nb}" style="display:flex;align-items:center;gap:4px;padding:3px 8px">${getNivelIcon(nivel)}<span>${nivel}</span></div>` : ""}
+            ${showNivel(nivel) ? `<div class="nivel-badge ${nb}">${getNivelIcon(nivel)}<span>${mapNivel(nivel)}</span></div>` : ""}
             <div class="cli-num">${clientes}</div>
             <div class="cli-label">clientes</div>
           </div>
