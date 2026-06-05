@@ -182,9 +182,9 @@
 </div>
 
 <div class="tiers-bar">
-  <div class="tier-pill bronce" id="tier-bronce-label">🥉 Bronce — cargando...</div>
-  <div class="tier-pill plata" id="tier-plata-label">🥈 Plata — cargando...</div>
-  <div class="tier-pill oro" id="tier-oro-label">🥇 Oro — cargando...</div>
+  <div class="tier-pill bronce" id="tier-bronce-label">🥉 Bronce — desde $500.000</div>
+  <div class="tier-pill plata" id="tier-plata-label">🥈 Plata — desde $1.000.000</div>
+  <div class="tier-pill oro" id="tier-oro-label">🥇 Oro — desde $1.500.000</div>
 </div>
 
 <div class="wrap">
@@ -252,6 +252,9 @@ function nbClass(n) {
   if (l.includes('bronce')) return 'nb-bronce';
   return 'nb-sin';
 }
+function showNivel(n) {
+  return n && n !== 'Sin nivel' && n.trim() !== '';
+}
 
 function tierKey(n) {
   if (!n || n === 'Sin nivel') return 'sin';
@@ -307,7 +310,7 @@ function renderPodio(top3) {
         <div class="podio-pos">Posición ${pos}</div>
         <div class="podio-name">${nombre}</div>
         ${taller ? `<div class="podio-taller">${taller}</div>` : ''}
-        <div class="podio-nivel ${nb}">${nivel}</div>
+        ${showNivel(nivel) ? `<div class="podio-nivel ${nb}">${nivel}</div>` : ""}
         <div class="podio-clientes">${clientes}</div>
         <div class="podio-cli-label">clientes referidos</div>
         ${prog.next ? `
@@ -375,7 +378,7 @@ function renderList(data, query='') {
           </div>` : ''}
         </div>
         <div class="right">
-          <div class="nivel-badge ${nb}">${nivel}</div>
+          ${showNivel(nivel) ? `<div class="nivel-badge ${nb}">${nivel}</div>` : ""}
           <div class="cli-num">${clientes}</div>
           <div class="cli-label">clientes</div>
         </div>
@@ -430,7 +433,7 @@ function applySearch(query) {
             </div>` : ''}
           </div>
           <div class="right">
-            <div class="nivel-badge ${nb}">${nivel}</div>
+            ${showNivel(nivel) ? `<div class="nivel-badge ${nb}">${nivel}</div>` : ""}
             <div class="cli-num">${clientes}</div>
             <div class="cli-label">clientes</div>
           </div>
