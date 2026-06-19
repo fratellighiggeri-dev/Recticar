@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ranking Referentes — Recticar Corrientes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy:#2b3d60; --navy-d:#1e2d4a; --navy-l:#3a5080; --navy-xl:#eef1f7;
+    --white:#ffffff; --bg:#f4f5f8; --border:#dde1ea;
+    --text:#1a2035; --text2:#5a6480; --text3:#9aa0b4;
+    --green:#0f6e56; --green-l:#e0f5ee;
+    --gold:#c8960a; --gold-l:#fdf5df; --gold-b:rgba(200,150,10,.25);
+    --silver:#6b7280; --silver-l:#f1f2f4; --silver-b:rgba(107,114,128,.25);
+    --bronze:#9a5020; --bronze-l:#fdf0e8; --bronze-b:rgba(154,80,32,.25);
+    --shadow:0 2px 8px rgba(43,61,96,.10);
+    --shadow-md:0 4px 16px rgba(43,61,96,.13);
+    --radius:12px;
+  }
+  body { font-family:'Poppins',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  /* HEADER */
+  .header { background:var(--navy); padding:32px 20px 28px; text-align:center; position:relative; overflow:hidden; }
+  .header::before { content:''; position:absolute; inset:0; pointer-events:none;
+    background: radial-gradient(ellipse 70% 80% at 50% 120%,rgba(255,255,255,.06) 0%,transparent 60%),
+    repeating-linear-gradient(45deg,transparent,transparent 28px,rgba(255,255,255,.02) 28px,rgba(255,255,255,.02) 29px); }
+  .header-inner { position:relative; z-index:1; max-width:640px; margin:0 auto; }
+  .logo-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:16px; }
+  .logo-mark { width:40px; height:40px; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.25);
+    border-radius:8px; display:flex; align-items:center; justify-content:center;
+    font-family:'DM Mono',monospace; font-size:12px; color:white; letter-spacing:-.5px; flex-shrink:0; }
+  .brand-name { font-size:13px; font-weight:600; color:rgba(255,255,255,.7); letter-spacing:.12em; text-transform:uppercase; }
+  h1 { font-size:clamp(26px,6vw,38px); font-weight:700; color:#fff; letter-spacing:-.5px; line-height:1.1; margin-bottom:6px; }
+  h1 span { color:rgba(255,255,255,.5); font-weight:400; }
+  .header-sub { font-size:13px; color:rgba(255,255,255,.5); letter-spacing:.04em; }
+
+  /* TIERS BAR */
+  .tiers-bar { background:var(--navy-d); padding:10px 20px; display:flex; justify-content:center; gap:6px; flex-wrap:wrap; }
+  .tier-pill { font-size:11px; font-weight:500; padding:4px 12px; border-radius:20px; letter-spacing:.04em; border:1px solid; }
+  .tier-pill.oro    { color:#f5d060; border-color:rgba(245,208,96,.3);  background:rgba(245,208,96,.08); }
+  .tier-pill.plata  { color:#c0c4cc; border-color:rgba(192,196,204,.3); background:rgba(192,196,204,.07); }
+  .tier-pill.bronce { color:#d4956a; border-color:rgba(212,149,106,.3); background:rgba(212,149,106,.08); }
+
+  /* WRAP */
+  .wrap { max-width:680px; margin:0 auto; padding:24px 16px 60px; }
+
+  /* SEARCH */
+  .search-box {
+    position:relative; margin-bottom:20px;
+  }
+  .search-box input {
+    width:100%; padding:12px 16px 12px 44px;
+    background:var(--white); border:1px solid var(--border);
+    border-radius:var(--radius); font-family:'Poppins',sans-serif;
+    font-size:14px; color:var(--text); outline:none;
+    box-shadow:var(--shadow); transition:border-color .2s;
+  }
+  .search-box input:focus { border-color:var(--navy); }
+  .search-box input::placeholder { color:var(--text3); }
+  .search-icon {
+    position:absolute; left:14px; top:50%; transform:translateY(-50%);
+    color:var(--text3); font-size:18px; pointer-events:none;
+  }
+  .search-clear {
+    position:absolute; right:14px; top:50%; transform:translateY(-50%);
+    background:none; border:none; color:var(--text3); cursor:pointer;
+    font-size:18px; display:none; padding:0; line-height:1;
+  }
+  .search-clear.visible { display:block; }
+
+  /* PODIO */
+  .podio { display:grid; grid-template-columns:1fr 1.15fr 1fr; gap:10px; margin-bottom:24px; align-items:end; }
+  .podio-card {
+    background:var(--white); border-radius:var(--radius);
+    border:1px solid var(--border); padding:16px 12px 14px;
+    text-align:center; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    transition:transform .2s, box-shadow .2s;
+    position:relative; overflow:hidden;
+  }
+  .podio-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+  .podio-1 { border-color:rgba(200,150,10,.4); background:linear-gradient(160deg,#fffdf0,#fff); }
+  .podio-2 { border-color:rgba(107,114,128,.3); background:linear-gradient(160deg,#f8f9fa,#fff); }
+  .podio-3 { border-color:rgba(154,80,32,.3); background:linear-gradient(160deg,#fdf5f0,#fff); }
+  .podio-medal { font-size:32px; line-height:1; }
+  .podio-pos { font-family:'DM Mono',monospace; font-size:11px; font-weight:500; color:var(--text3); }
+  .podio-name { font-weight:700; font-size:13px; color:var(--text); line-height:1.3; }
+  .podio-taller { font-size:11px; color:var(--text3); }
+  .podio-nivel { font-size:10px; font-weight:600; padding:2px 8px; border-radius:10px; letter-spacing:.04em; text-transform:uppercase; border:1px solid; margin-top:2px; }
+  .nb-oro    { color:var(--gold);   background:var(--gold-l);   border-color:var(--gold-b); }
+  .nb-plata  { color:var(--silver); background:var(--silver-l); border-color:var(--silver-b); }
+  .nb-bronce { color:var(--bronze); background:var(--bronze-l); border-color:var(--bronze-b); }
+  .nb-sin    { color:var(--text3);  background:var(--bg);        border-color:var(--border); }
+  .nivel-badge, .podio-nivel { display:inline-flex; align-items:center; gap:4px; }
+  .podio-clientes { font-family:'DM Mono',monospace; font-size:22px; font-weight:700; color:var(--navy); line-height:1; }
+  .podio-cli-label { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; }
+
+  /* PROGRESS */
+  .podio-progress { width:100%; margin-top:6px; }
+  .prog-label { font-size:10px; color:var(--text3); margin-bottom:3px; text-align:left; }
+  .prog-bar { height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+  .prog-fill { height:100%; border-radius:3px; transition:width .6s ease; }
+  .prog-fill.oro    { background:linear-gradient(90deg,#e8a020,#f5d060); }
+  .prog-fill.plata  { background:linear-gradient(90deg,#8090a8,#b0bec5); }
+  .prog-fill.bronce { background:linear-gradient(90deg,#9a5020,#cd8040); }
+
+  /* SECTION LABEL */
+  .section-label { font-size:10px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:.1em; margin-bottom:12px; padding-left:4px; }
+
+  /* RANKING LIST */
+  .ranking { display:flex; flex-direction:column; gap:8px; }
+  .row {
+    background:var(--white); border:1px solid var(--border); border-radius:var(--radius);
+    padding:14px 16px; display:grid; grid-template-columns:42px 1fr auto;
+    align-items:center; gap:12px; box-shadow:var(--shadow);
+    opacity:0; transform:translateY(10px); animation:fadeUp .35s ease forwards;
+    transition:border-color .2s, box-shadow .2s, transform .15s;
+  }
+  .row:hover { border-color:var(--navy-l); box-shadow:var(--shadow-md); transform:translateY(-1px); }
+  .row.hidden { display:none; }
+  .row.highlight { border-color:var(--navy); background:var(--navy-xl); }
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+  .pos { font-family:'DM Mono',monospace; font-size:18px; font-weight:600; color:var(--text3); text-align:center; }
+
+  .info { min-width:0; }
+  .mec-name { font-weight:600; font-size:14px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .mec-meta { font-size:11px; color:var(--text3); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  /* PROGRESS IN ROW */
+  .row-progress { margin-top:6px; }
+  .row-prog-bar { height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+  .row-prog-fill { height:100%; border-radius:2px; }
+  .row-prog-fill.oro    { background:linear-gradient(90deg,#e8a020,#f5d060); }
+  .row-prog-fill.plata  { background:linear-gradient(90deg,#8090a8,#b0bec5); }
+  .row-prog-fill.bronce { background:linear-gradient(90deg,#9a5020,#cd8040); }
+  .row-prog-label { font-size:10px; color:var(--text3); margin-top:2px; }
+
+  .right { text-align:right; flex-shrink:0; }
+  .nivel-badge { font-size:10px; font-weight:600; padding:2px 9px; border-radius:10px; letter-spacing:.05em; text-transform:uppercase; display:inline-block; margin-bottom:5px; border:1px solid; }
+  .cli-num { font-family:'DM Mono',monospace; font-size:22px; font-weight:700; color:var(--navy); line-height:1; }
+  .cli-label { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:.06em; }
+
+  /* LOADING / ERROR */
+  .loading { text-align:center; padding:56px 20px; color:var(--text2); font-size:13px; }
+  .spinner { width:28px; height:28px; border:2px solid var(--border); border-top-color:var(--navy); border-radius:50%; animation:spin .7s linear infinite; margin:0 auto 14px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .error-box { background:var(--white); border:1px solid #f0c0b0; border-radius:var(--radius); padding:24px 20px; color:#993020; font-size:13px; text-align:center; line-height:1.7; }
+  .empty { text-align:center; padding:40px 20px; color:var(--text3); font-size:13px; }
+  .no-results { text-align:center; padding:32px 20px; color:var(--text3); font-size:13px; display:none; }
+
+  /* FOOTER */
+  .updated { text-align:center; font-size:11px; color:var(--text3); margin:18px 0 0; }
+  .footer { margin-top:32px; text-align:center; font-size:11px; color:var(--text3); letter-spacing:.04em; }
+  .footer strong { color:var(--navy); }
+
+  @media(max-width:480px) {
+    .podio { grid-template-columns:1fr 1.1fr 1fr; gap:6px; }
+    .podio-card { padding:12px 8px 10px; }
+    .podio-medal { font-size:26px; }
+    .podio-name { font-size:12px; }
+    .podio-clientes { font-size:18px; }
+    .row { grid-template-columns:36px 1fr auto; gap:8px; padding:12px; }
+    .cli-num { font-size:18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo-row">
+      <div class="logo-mark">RC</div>
+      <div class="brand-name">Recticar Corrientes</div>
+    </div>
+    <h1>Ranking <span>de</span> Referentes</h1>
+    <div class="header-sub">Programa de mecánicos aliados · Actualización automática</div>
+  </div>
+</div>
+
+<div class="tiers-bar">
+  <div class="tier-pill bronce" id="tier-bronce-label">Socio — desde $500.000</div>
+  <div class="tier-pill plata" id="tier-plata-label">Pro — desde $1.000.000</div>
+  <div class="tier-pill oro" id="tier-oro-label">Premium — desde $1.500.000</div>
+</div>
+
+<div class="wrap">
+
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search-input" placeholder="Buscar mecánico por nombre o taller...">
+    <button class="search-clear" id="search-clear">✕</button>
+  </div>
+
+  <div id="podio-container"></div>
+
+  <div class="section-label" id="resto-label" style="display:none">Posiciones 4 en adelante</div>
+  <div class="ranking" id="ranking-list"></div>
+  <div class="no-results" id="no-results">No se encontraron mecánicos con ese nombre.</div>
+
+  <div class="updated" id="updated"></div>
+  <div class="footer">Solo lectura · <strong>Recticar Corrientes</strong> · Repuestos &amp; Rectificaciones · Corrientes, Argentina</div>
+
+</div>
+
+<script>
+const SHEET_ID = '2PACX-1vRJV2N4t_th0RMtlAV6tvNaJePwsdbVTYcNFzlyF37iYbQlu9YnnuX-jHbD0ml8MA';
+const GID      = '428144836';
+const getBaseURL = () => `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?gid=${GID}&single=true&output=csv&t=${Date.now()}`;
+const getProxies = () => {
+  const url = getBaseURL();
+  return [
+    url,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+    `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  ];
+};
+
+// Col indices (0-based): A=0(vacío), B=1(Pos), C=2(Medalla), D=3(Nombre), E=4(Taller), F=5(Zona), G=6(Nivel), H=7(Clientes)
+const C = { pos:1, nombre:3, taller:4, zona:5, nivel:6, clientes:7 };
+
+// Tier thresholds (clientes como proxy de actividad)
+// Usamos nivel directamente desde el sheet
+const TIER_NEXT = { 'bronce': { label:'Plata', min:40000 }, 'plata': { label:'Oro', min:100000 }, 'oro': null };
+
+
+const ICONS = {
+  socio: `<svg viewBox="-18 -18 36 36" width="14" height="14" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:.8">
+    <g transform="rotate(-35)" fill="currentColor">
+      <rect x="-3" y="1" width="6" height="14" rx="2"/>
+      <rect x="-8" y="-10" width="16" height="10" rx="3"/>
+      <rect x="-4" y="-8" width="8" height="6" rx="2" fill="white" opacity="0.9"/>
+    </g>
+  </svg>`,
+  pro: `<svg viewBox="-18 -18 36 36" width="14" height="14" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:.8">
+    <circle cx="0" cy="0" r="13" fill="none" stroke="currentColor" stroke-width="2"/>
+    <circle cx="0" cy="0" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="2" fill="currentColor"/>
+    <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <line x1="0" y1="-7" x2="0" y2="-11"/>
+      <line x1="6" y1="-3.5" x2="9.5" y2="-5.5"/>
+      <line x1="6" y1="3.5" x2="9.5" y2="5.5"/>
+      <line x1="0" y1="7" x2="0" y2="11"/>
+      <line x1="-6" y1="3.5" x2="-9.5" y2="5.5"/>
+      <line x1="-6" y1="-3.5" x2="-9.5" y2="-5.5"/>
+    </g>
+  </svg>`,
+  premium: `<svg viewBox="-18 -18 36 36" width="14" height="14" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;opacity:.8">
+    <polygon points="0,-14 11,-4 7,13 -7,13 -11,-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    <line x1="-11" y1="-4" x2="0" y2="-4" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+    <line x1="11" y1="-4" x2="0" y2="-4" stroke="currentColor" stroke-width="1" opacity="0.6"/>
+    <line x1="0" y1="-14" x2="0" y2="-4" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+    <line x1="0" y1="-4" x2="7" y2="13" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+    <line x1="0" y1="-4" x2="-7" y2="13" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+  </svg>`
+};
+
+function getNivelIcon(nivel) {
+  if (!nivel || nivel === 'Sin nivel') return '';
+  const l = nivel.toLowerCase();
+  if (l.includes('premium') || l.includes('oro'))   return ICONS.premium;
+  if (l.includes('pro')     || l.includes('plata')) return ICONS.pro;
+  if (l.includes('socio')   || l.includes('bronce')) return ICONS.socio;
+  return '';
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n').map(l=>l.trim()).filter(Boolean);
+  if (lines.length < 2) return [];
+  const rows = [];
+  for (let i=1; i<lines.length; i++) {
+    const cols=[]; let cur='', inQ=false;
+    for (let c=0; c<lines[i].length; c++) {
+      const ch=lines[i][c];
+      if (ch==='"') { inQ=!inQ; }
+      else if (ch===',' && !inQ) { cols.push(cur.trim()); cur=''; }
+      else { cur+=ch; }
+    }
+    cols.push(cur.trim());
+    rows.push(cols);
+  }
+  return rows;
+}
+
+function nbClass(n) {
+  if (!n || n === 'Sin nivel') return 'nb-sin';
+  const l=n.toLowerCase();
+  if (l.includes('oro')    || l.includes('premium')) return 'nb-oro';
+  if (l.includes('plata')  || l.includes('pro'))     return 'nb-plata';
+  if (l.includes('bronce') || l.includes('socio'))   return 'nb-bronce';
+  return 'nb-sin';
+}
+function showNivel(n) {
+  return n && n !== 'Sin nivel' && n.trim() !== '';
+}
+function mapNivel(n) {
+  if (!n) return '';
+  const l = n.toLowerCase();
+  if (l.includes('oro')    || l.includes('premium')) return 'Premium';
+  if (l.includes('plata')  || l.includes('pro'))     return 'Pro';
+  if (l.includes('bronce') || l.includes('socio'))   return 'Socio';
+  return '';
+}
+
+function tierKey(n) {
+  if (!n || n === 'Sin nivel') return 'sin';
+  const l=n.toLowerCase();
+  if (l.includes('oro'))    return 'oro';
+  if (l.includes('plata'))  return 'plata';
+  if (l.includes('bronce')) return 'bronce';
+  return 'sin';
+}
+
+function progClass(n) {
+  const k=tierKey(n);
+  if (k==='oro') return 'oro';
+  if (k==='plata') return 'plata';
+  return 'bronce';
+}
+
+function getProgress(nivel, clientes) {
+  const k = tierKey(nivel);
+  if (k === 'oro')    return { pct:100, label:'Nivel máximo 🥇', next:null };
+  if (k === 'plata')  return { pct:75,  label:'Próximo nivel: Premium', next:'oro' };
+  if (k === 'bronce') return { pct:50,  label:'Próximo nivel: Pro', next:'plata' };
+  return               { pct:15,  label:'Seguí sumando para llegar a Socio', next:'bronce' };
+}
+
+let allData = [];
+
+function renderPodio(top3) {
+  const container = document.getElementById('podio-container');
+  if (!top3.length) { container.innerHTML=''; return; }
+
+  // Order: 2nd, 1st, 3rd for visual podium effect
+  const order = [top3[1], top3[0], top3[2]].filter(Boolean);
+  const centerIdx = top3[1] ? 1 : 0;
+
+  const cards = top3.slice(0,3).map((r, i) => {
+    if (!r) return '<div></div>';
+    const pos      = parseInt(r[C.pos]);
+    const nombre   = r[C.nombre]   || '—';
+    const taller   = r[C.taller]   || '';
+    const nivel    = r[C.nivel]    || '🥉 Bronce';
+    const clientes = r[C.clientes] || '0';
+    const medals   = {1:'🥇',2:'🥈',3:'🥉'};
+    const medal    = medals[pos] || '';
+    const cls      = `podio-card podio-${pos}`;
+    const nb       = nbClass(nivel);
+    const prog     = getProgress(nivel, clientes);
+    const pc       = progClass(nivel);
+
+    return `
+      <div class="${cls}">
+        <div class="podio-medal">${medal}</div>
+        <div class="podio-pos">Posición ${pos}</div>
+        <div class="podio-name">${nombre}</div>
+        ${taller ? `<div class="podio-taller">${taller}</div>` : ''}
+        ${showNivel(nivel) ? `<div class="podio-nivel ${nb}">${getNivelIcon(nivel)}<span>${mapNivel(nivel)}</span></div>` : ""}
+        <div class="podio-clientes">${clientes}</div>
+        <div class="podio-cli-label">clientes referidos</div>
+        ${prog.next ? `
+        <div class="podio-progress">
+          <div class="prog-label">${prog.label}</div>
+          <div class="prog-bar"><div class="prog-fill ${pc}" style="width:${prog.pct}%"></div></div>
+        </div>` : `<div style="font-size:10px;color:var(--gold);margin-top:4px;font-weight:600">Nivel máximo 🏆</div>`}
+      </div>`;
+  });
+
+  // Reorder: pos2, pos1, pos3
+  const reordered = [
+    top3[1] ? cards[1] : '<div></div>',
+    cards[0],
+    top3[2] ? cards[2] : '<div></div>',
+  ];
+
+  container.innerHTML = `
+    <div class="section-label" style="margin-bottom:12px">🏆 Podio</div>
+    <div class="podio">${reordered.join('')}</div>
+  `;
+}
+
+function renderList(data, query='') {
+  const list      = document.getElementById('ranking-list');
+  const noResults = document.getElementById('no-results');
+  const restoLabel= document.getElementById('resto-label');
+
+  const rest = data.slice(3); // posiciones 4+
+  if (!rest.length) {
+    list.innerHTML='';
+    restoLabel.style.display='none';
+    noResults.style.display='none';
+    return;
+  }
+
+  const q = query.toLowerCase().trim();
+  let found = 0;
+
+  const html = rest.map((r, i) => {
+    const pos      = parseInt(r[C.pos]) || (i+4);
+    const nombre   = r[C.nombre]   || '—';
+    const taller   = r[C.taller]   || '';
+    const zona     = r[C.zona]     || '';
+    const nivel    = r[C.nivel]    || '🥉 Bronce';
+    const clientes = r[C.clientes] || '0';
+    const nb       = nbClass(nivel);
+    const meta     = [taller, zona].filter(Boolean).join(' · ');
+    const prog     = getProgress(nivel, clientes);
+    const pc       = progClass(nivel);
+
+    const matches = !q || nombre.toLowerCase().includes(q) || taller.toLowerCase().includes(q);
+    if (matches) found++;
+
+    return `
+      <div class="row${matches ? '' : ' hidden'}" style="animation-delay:${i*40}ms">
+        <div class="pos">${pos}</div>
+        <div class="info">
+          <div class="mec-name">${nombre}</div>
+          ${meta ? `<div class="mec-meta">${meta}</div>` : ''}
+          ${prog.next ? `
+          <div class="row-progress">
+            <div class="row-prog-bar"><div class="row-prog-fill ${pc}" style="width:${prog.pct}%"></div></div>
+            <div class="row-prog-label">${prog.label}</div>
+          </div>` : ''}
+        </div>
+        <div class="right">
+          ${showNivel(nivel) ? `<div class="nivel-badge ${nb}">${getNivelIcon(nivel)}<span>${mapNivel(nivel)}</span></div>` : ""}
+          <div class="cli-num">${clientes}</div>
+          <div class="cli-label">clientes</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  list.innerHTML = html;
+  restoLabel.style.display = rest.length ? 'block' : 'none';
+  noResults.style.display = (q && found === 0) ? 'block' : 'none';
+}
+
+// Search also filters podio
+function applySearch(query) {
+  const q = query.toLowerCase().trim();
+  const container = document.getElementById('podio-container');
+
+  if (q) {
+    // Hide podio when searching, show all rows
+    container.style.display = 'none';
+    document.getElementById('resto-label').style.display = 'none';
+
+    const allRows = allData;
+    const noResults = document.getElementById('no-results');
+    const list = document.getElementById('ranking-list');
+    let found = 0;
+
+    const html = allRows.map((r, i) => {
+      const pos      = parseInt(r[C.pos]) || (i+1);
+      const nombre   = r[C.nombre]   || '—';
+      const taller   = r[C.taller]   || '';
+      const zona     = r[C.zona]     || '';
+      const nivel    = r[C.nivel]    || '🥉 Bronce';
+      const clientes = r[C.clientes] || '0';
+      const nb       = nbClass(nivel);
+      const meta     = [taller, zona].filter(Boolean).join(' · ');
+      const prog     = getProgress(nivel, clientes);
+      const pc       = progClass(nivel);
+
+      const matches = nombre.toLowerCase().includes(q) || taller.toLowerCase().includes(q);
+      if (matches) found++;
+
+      return `
+        <div class="row${matches ? ' highlight' : ' hidden'}">
+          <div class="pos">${pos}</div>
+          <div class="info">
+            <div class="mec-name">${nombre}</div>
+            ${meta ? `<div class="mec-meta">${meta}</div>` : ''}
+            ${prog.next ? `
+            <div class="row-progress">
+              <div class="row-prog-bar"><div class="row-prog-fill ${pc}" style="width:${prog.pct}%"></div></div>
+              <div class="row-prog-label">${prog.label}</div>
+            </div>` : ''}
+          </div>
+          <div class="right">
+            ${showNivel(nivel) ? `<div class="nivel-badge ${nb}">${getNivelIcon(nivel)}<span>${mapNivel(nivel)}</span></div>` : ""}
+            <div class="cli-num">${clientes}</div>
+            <div class="cli-label">clientes</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    list.innerHTML = html;
+    noResults.style.display = found === 0 ? 'block' : 'none';
+  } else {
+    container.style.display = '';
+    renderPodio(allData.slice(0,3));
+    renderList(allData);
+  }
+}
+
+function formatMonto(n) {
+  if (!n || isNaN(n)) return '...';
+  const num = parseInt(n);
+  if (num >= 1000000) return '$' + (num/1000000).toLocaleString('es-AR') + 'M';
+  return '$' + num.toLocaleString('es-AR');
+}
+
+function render(rows) {
+  // Leer config de filas especiales al final del CSV
+  let minPlata = null, minOro = null;
+  rows.forEach(r => {
+    if ((r[1]||'').trim() === 'CONFIG_PLATA') minPlata = parseInt(r[2]);
+    if ((r[1]||'').trim() === 'CONFIG_ORO')   minOro   = parseInt(r[2]);
+  });
+  let minBronce = null;
+  rows.forEach(r => {
+    if ((r[1]||'').trim() === 'CONFIG_BRONCE') minBronce = parseInt(r[2]);
+  });
+  if (minBronce) { 
+    document.getElementById('tier-bronce-label').textContent = `Socio — desde ${formatMonto(minBronce)}`;
+  }
+  if (minPlata) document.getElementById('tier-plata-label').textContent = `Pro — desde ${formatMonto(minPlata)}`;
+  if (minOro)   document.getElementById('tier-oro-label').textContent   = `🥇 Oro — desde ${formatMonto(minOro)}`;
+  const valid = rows
+    .filter(r => (r[C.nombre]||'').trim() && !isNaN(parseInt(r[C.pos])) && parseInt(r[C.pos])>0)
+    .sort((a,b) => parseInt(a[C.pos])-parseInt(b[C.pos]));
+
+  if (!valid.length) {
+    document.getElementById('podio-container').innerHTML='<div class="empty">No hay mecánicos en el ranking aún.</div>';
+    return;
+  }
+
+  allData = valid;
+  renderPodio(valid.slice(0,3));
+  renderList(valid);
+
+  const now = new Date();
+  document.getElementById('updated').textContent =
+    'Actualizado: '+now.toLocaleString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+
+async function tryFetch(urls, i=0) {
+  if (i>=urls.length) throw new Error('Sin conexión');
+  try {
+    const res = await fetch(urls[i], {cache:'no-store'});
+    if (!res.ok) throw new Error('HTTP '+res.status);
+    const text = await res.text();
+    if (!text||text.length<10) throw new Error('Vacío');
+    return text;
+  } catch(e) {
+    console.warn(`Proxy ${i+1} falló:`,e.message);
+    return tryFetch(urls, i+1);
+  }
+}
+
+async function load() {
+  try {
+    render(parseCSV(await tryFetch(getProxies())));
+  } catch(e) {
+    document.getElementById('podio-container').innerHTML=`
+      <div class="error-box">No se pudo cargar el ranking.<br>
+      <small>Verificá tu conexión y recargá la página.</small></div>`;
+  }
+}
+
+// Search events
+const searchInput = document.getElementById('search-input');
+const searchClear = document.getElementById('search-clear');
+
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value;
+  searchClear.classList.toggle('visible', q.length>0);
+  applySearch(q);
+});
+
+searchClear.addEventListener('click', () => {
+  searchInput.value='';
+  searchClear.classList.remove('visible');
+  applySearch('');
+});
+
+load();
+setInterval(load, 30*1000); // cada 30 segundos
+</script>
+</body>
+</html>
